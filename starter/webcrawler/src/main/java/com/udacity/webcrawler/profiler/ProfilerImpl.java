@@ -33,6 +33,7 @@ final class ProfilerImpl implements Profiler {
   }
 
   @Override
+  @SuppressWarnings("unchecked")
   public <T> T wrap(Class<T> klass, T delegate) {
     Objects.requireNonNull(klass);
     Object proxy = null;

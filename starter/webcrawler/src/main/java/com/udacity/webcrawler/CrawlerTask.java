@@ -62,6 +62,70 @@ public final class CrawlerTask extends RecursiveTask<Map<String, Integer>> {
         return visitedUrls;
     }
 
+    @Override
+    public int hashCode() {
+        final int prime = 31;
+        int result = 1;
+        result = prime * result + ((clock == null) ? 0 : clock.hashCode());
+        result = prime * result + ((deadline == null) ? 0 : deadline.hashCode());
+        result = prime * result + ((ignoredUrls == null) ? 0 : ignoredUrls.hashCode());
+        result = prime * result + maxDepth;
+        result = prime * result + ((parserFactory == null) ? 0 : parserFactory.hashCode());
+        result = prime * result + ((url == null) ? 0 : url.hashCode());
+        result = prime * result + ((visitedUrls == null) ? 0 : visitedUrls.hashCode());
+        return result;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj)
+            return true;
+        if (obj == null)
+            return false;
+        if (getClass() != obj.getClass())
+            return false;
+        CrawlerTask other = (CrawlerTask) obj;
+        if (clock == null) {
+            if (other.clock != null)
+                return false;
+        } else if (!clock.equals(other.clock))
+            return false;
+        if (deadline == null) {
+            if (other.deadline != null)
+                return false;
+        } else if (!deadline.equals(other.deadline))
+            return false;
+        if (ignoredUrls == null) {
+            if (other.ignoredUrls != null)
+                return false;
+        } else if (!ignoredUrls.equals(other.ignoredUrls))
+            return false;
+        if (maxDepth != other.maxDepth)
+            return false;
+        if (parserFactory == null) {
+            if (other.parserFactory != null)
+                return false;
+        } else if (!parserFactory.equals(other.parserFactory))
+            return false;
+        if (url == null) {
+            if (other.url != null)
+                return false;
+        } else if (!url.equals(other.url))
+            return false;
+        if (visitedUrls == null) {
+            if (other.visitedUrls != null)
+                return false;
+        } else if (!visitedUrls.equals(other.visitedUrls))
+            return false;
+        return true;
+    }
+
+    @Override
+    public String toString() {
+        return "CrawlerTask [clock=" + clock + ", deadline=" + deadline + ", ignoredUrls=" + ignoredUrls + ", maxDepth="
+                + maxDepth + ", parserFactory=" + parserFactory + ", url=" + url + ", visitedUrls=" + visitedUrls + "]";
+    }
+
     public static final class Builder {
         private String url;
         private Instant deadline;
