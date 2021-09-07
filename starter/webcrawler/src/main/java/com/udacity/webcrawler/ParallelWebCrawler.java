@@ -12,6 +12,7 @@ import java.time.Duration;
 import java.time.Instant;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentSkipListSet;
 import java.util.concurrent.ForkJoinPool;
@@ -56,7 +57,7 @@ final class ParallelWebCrawler implements WebCrawler {
     Instant deadline = clock.instant().plus(timeout);
     Map<String, Integer> totalWordCounts = new ConcurrentHashMap<>();
      
-    ConcurrentSkipListSet<String> visitedUrls = new ConcurrentSkipListSet<>();
+    Set<String> visitedUrls = new ConcurrentSkipListSet<>();
     log.info("in crawl method on urls: " + startingUrls);
     for (String url : startingUrls) {
       

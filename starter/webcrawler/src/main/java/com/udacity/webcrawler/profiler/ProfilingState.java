@@ -10,10 +10,15 @@ import java.util.Objects;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.stream.Collectors;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 /**
  * Helper class that records method performance data from the method interceptor.
  */
 final class ProfilingState {
+  private static final Logger log = LoggerFactory.getLogger(ProfilingState.class);
+
   private final Map<String, Duration> data = new ConcurrentHashMap<>();
 
   /**
@@ -32,6 +37,7 @@ final class ProfilingState {
     }
     String key = formatMethodCall(callingClass, method);
     data.compute(key, (k, v) -> (v == null) ? elapsed : v.plus(elapsed));
+    log.debug("recorded for " + callingClass.getClass().getName() + "#" + method.getName() + ", elapsed: " + elapsed);
   }
 
   /**

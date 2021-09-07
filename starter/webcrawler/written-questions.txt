@@ -11,6 +11,9 @@ Q1. Run the web crawler using the configurations located at src/main/config/writ
 
     Why did the parser take more time when run with ParallelWebCrawler?
 
+    Answer: The PageParserImpl#parse is called inside ParallelWebCrawler#crawl method. Moreover these are invocations from different threads using forkjoinpool recursive tasks compute method.
+    And the total elapsed time of PageParserImpl#parse method recorded by profiler is the total amount of time taken by all the threads and so the number is large.
+
 
 Q2. Your manager ran your crawler on her old personal computer, using the configurations from Q1, and she notices that
     the sequential crawler actually outperforms the parallel crawler. She would like to know why.
@@ -18,16 +21,27 @@ Q2. Your manager ran your crawler on her old personal computer, using the config
     (a) Suggest one reason why the sequential web crawler was able to read more web pages than the parallel crawler.
         (Hint: Try setting "parallelism" to 1 in the JSON configs to simulate your manager's computer.)
 
+    Answer: The real benefit of "parallelism" or multi-threading can only be seen in a multi-core processors based systems.
+    Running the parallel crawler in a old single core machine does not provide any benefit and possibly takes slightly 
+    more time as the processor needs to switch between threads unnecessarily. It is better to run a sequential program on a single core processor.
+
     (b) Suggest one scenario in which the parallel web crawler will almost certainly perform better than the sequential
         crawler. Why will it perform better?
+    
+    Answer: Parallel web crawler certainly outperforms on a multi-core processor where the processor can execute multiple threads at the same time based on number of available cores.
 
 
 Q3. Analyze your method profiler through the lens of Aspect Oriented Programming, by answering the following questions:
 
     (a) What cross-cutting concern is being addressed by the com.udacity.webcrawler.profiler.Profiler class?
 
+    Answer: This class provides performance profiling towards cross-cutting concerns
+
     (b) What are the join points of the Profiler in the web crawler program?
 
+    Answer: In general, the join points in AOP are the points where an aspect can be plugged in.
+    In our performance profiler, the join points are the methods annotated with @Profiled, so that we record the time when these methods are called to obtain elapsed time of these method executions.
+    Ofcourse, we need to use the dynamic proxy in order to instantiate the class containing these methods.
 
 Q4. Identify three (3) different design patterns used in this project, and explain which interfaces, classes, and/or
     libraries use or implement those design patterns.
@@ -35,4 +49,14 @@ Q4. Identify three (3) different design patterns used in this project, and expla
     For each pattern, name one thing about the pattern that you LIKED, and one thing you DISLIKED. If you did not like
     anything, you can name two things you disliked.
 
-
+    Answer: Following are the design patterns learned and applied in this project and thir benefits
+    - DEPENDENCY INJECTION:
+        - Pull out the creation logic of dependencies outside of business logic code
+        - Dynamically injects the dependent objects
+    - BUILDER: 
+        - constructs step-by-step manner and the abaility to created the object with optional parameters
+        - create immutable data objects
+    - ABSTRACT FACTORY: 
+        - Abstracts the creation of objects that belongs to same product family without the need to depend on the concrete classes.
+        - Open/Closed Principle: Without the need for client code change, we can introduce new product variants.
+        - One thing that I DISLIKED is complexity and class proliferation. Sometimes, in a large project, when we apply design patterns such as Abstract Factory for example, it leads to huge number of classes.
