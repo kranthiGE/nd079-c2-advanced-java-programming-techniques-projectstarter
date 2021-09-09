@@ -187,10 +187,11 @@ public final class CrawlerTask extends RecursiveTask<Map<String, Integer>> {
                 return null;
             }
         }
-        if (visitedUrls.contains(url)) {
+        // if visitedUrls has the given url then .add returns false
+        // if false then return
+        if (!visitedUrls.add(url)) {
             return null;
         }
-        visitedUrls.add(url);
         PageParser.Result result = parserFactory.get(url).parse();
         Map<String, Integer> wordCounts = new ConcurrentHashMap<>();
         wordCounts.putAll(result.getWordCounts());
